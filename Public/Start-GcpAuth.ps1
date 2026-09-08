@@ -25,7 +25,7 @@ function Start-GcpAuth {
             Path to the Git cookie file used by http.cookiefile. Defaults to
             '<home>/.gitcookies' and works on Windows, macOS, and Linux.
 
-        .PARAMETER PasswordPageUrl
+        .PARAMETER CredentialPageUrl
             URL of the Google Source Repositories password generation page.
             Exposed as a parameter so it can be overridden or tested without
             editing the function body.
@@ -60,7 +60,7 @@ function Start-GcpAuth {
         [string]$GitCookieFilePath = (Join-Path -Path $HOME -ChildPath '.gitcookies'),
 
         [ValidateNotNullOrEmpty()]
-        [string]$PasswordPageUrl = 'https://source.developers.google.com/new-password',
+        [string]$CredentialPageUrl = 'https://source.developers.google.com/new-password',
 
         [switch]$SkipGitCredentialSetup
     )
@@ -105,10 +105,10 @@ function Start-GcpAuth {
 
     Write-Host "Opening the Google Source Repositories password page in your browser..." -ForegroundColor Yellow
     try {
-        Start-Process -FilePath $PasswordPageUrl
+        Start-Process -FilePath $CredentialPageUrl
     }
     catch {
-        Write-Warning "Could not open the browser automatically. Please open this URL manually: $PasswordPageUrl"
+        Write-Warning "Could not open the browser automatically. Please open this URL manually: $CredentialPageUrl"
     }
 
     Set-GitCredentialFromClipboard
