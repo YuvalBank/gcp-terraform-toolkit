@@ -8,9 +8,9 @@
     # Unique identifier for this module.
     GUID              = '5c972c2c-ce41-4850-a21b-7a8a5161c5bd'
 
-    Author            = 'Your Name'
-    CompanyName       = 'Unknown'
-    Copyright         = '(c) 2026 Your Name. Licensed under the MIT License.'
+    Author            = 'Yuval Bank'
+    CompanyName       = 'Yuval Bank'
+    Copyright         = '(c) 2026 Yuval Bank. Licensed under the MIT License.'
 
     Description       = 'PowerShell shortcuts for Google Cloud (gcloud) authentication and everyday Terraform workflows, designed to work consistently across Windows, macOS, and Linux.'
 
@@ -45,8 +45,8 @@
     PrivateData = @{
         PSData = @{
             Tags         = @('GCP', 'GoogleCloud', 'Terraform', 'DevOps', 'CLI', 'Automation', 'Windows', 'Linux', 'macOS')
-            LicenseUri   = 'https://github.com/YOUR_USERNAME/gcp-terraform-toolkit/blob/main/LICENSE'
-            ProjectUri   = 'https://github.com/YOUR_USERNAME/gcp-terraform-toolkit'
+            LicenseUri   = 'https://github.com/YuvalBank/gcp-terraform-toolkit/blob/main/LICENSE'
+            ProjectUri   = 'https://github.com/YuvalBank/gcp-terraform-toolkit'
             ReleaseNotes = 'See CHANGELOG.md for release history.'
         }
     }
