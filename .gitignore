@@ -1,0 +1,22 @@
+# PowerShell
+*.log
+TestResults/
+coverage.xml
+
+# Terraform (in case example .tf files are added later)
+.terraform/
+*.tfstate
+*.tfstate.backup
+.terraform.lock.hcl
+*.tfvars
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+
+# Module packaging output
+*.nupkg
