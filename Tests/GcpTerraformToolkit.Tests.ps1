@@ -122,12 +122,14 @@ Describe 'Start-GcpAuth' {
     }
 }
 
-Describe 'Test-CommandExists' {
-    It 'returns $true for a command that exists' {
-        Test-CommandExists -Name 'Get-Command' | Should -BeTrue
-    }
+InModuleScope GcpTerraformToolkit {
+    Describe 'Test-CommandExists' {
+        It 'returns $true for a command that exists' {
+            Test-CommandExists -Name 'Get-Command' | Should -BeTrue
+        }
 
-    It 'returns $false for a command that does not exist' {
-        Test-CommandExists -Name 'this-command-does-not-exist-12345' | Should -BeFalse
+        It 'returns $false for a command that does not exist' {
+            Test-CommandExists -Name 'this-command-does-not-exist-12345' | Should -BeFalse
+        }
     }
 }
