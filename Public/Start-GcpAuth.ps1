@@ -60,6 +60,7 @@ function Start-GcpAuth {
         [string]$GitCookieFilePath = (Join-Path -Path $HOME -ChildPath '.gitcookies'),
 
         [ValidateNotNullOrEmpty()]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Justification = 'This is a public Google URL whose path happens to contain the word "password"; it is not a credential value.')]
         [string]$CredentialPageUrl = 'https://source.developers.google.com/new-password',
 
         [switch]$SkipGitCredentialSetup
