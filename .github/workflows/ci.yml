@@ -8,18 +8,32 @@ on:
 
 jobs:
   test:
+    name: Lint & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
+
+      - name: Ensure PSGallery is registered and trusted
+        shell: pwsh
+        run: |
+          # Works around an intermittent GitHub-hosted runner issue where PSGallery
+          # is occasionally missing on freshly provisioned windows-latest runners.
+          # See: https://github.com/actions/runner-images/issues/13758
+          if (-not (Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue)) {
+            Register-PSRepository -Default
+          }
+          Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
       - name: Install Pester
         shell: pwsh
@@ -30,19 +44,21 @@ jobs:
       - name: Install PSScriptAnalyzer
         shell: pwsh
         run: |
-          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck -Scope CurrentUser
           Import-Module PSScriptAnalyzer
 
       - name: Lint with PSScriptAnalyzer
         shell: pwsh
         run: |
-          $settings = Import-PowerShellDataFile -Path ./PSScriptAnalyzerSettings.psd1
-          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings $settings
-          if ($results) {
-            $results | Format-Table -AutoSize
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
+          $results | Format-Table -AutoSize
+
+          $errors = $results | Where-Object { $_.Severity -eq 'Error' }
+          if ($errors) {
+            Write-Host "::error::PSScriptAnalyzer found $($errors.Count) error(s)."
             exit 1
           }
-          Write-Host "✓ Linting passed" -ForegroundColor Green
+          Write-Host "Linting passed" -ForegroundColor Green
 
       - name: Run Pester tests
         shell: pwsh
@@ -51,6 +67,8 @@ jobs:
           $config.Run.Path = './Tests'
           $config.Run.Exit = $true
           $config.Output.Verbosity = 'Detailed'
+          $config.CodeCoverage.Enabled = $true
+          $config.CodeCoverage.Path = @('./Public/*.ps1', './Private/*.ps1')
           Invoke-Pester -Configuration $config
 
       - name: Verify module loads
@@ -58,5 +76,5 @@ jobs:
         run: |
           Import-Module ./GcpTerraformToolkit.psd1 -Force -Verbose
           $functions = Get-Command -Module GcpTerraformToolkit -Type Function
-          Write-Host "✓ Module loaded with $($functions.Count) functions" -ForegroundColor Green
+          Write-Host "Module loaded with $($functions.Count) functions" -ForegroundColor Green
           $functions | Format-Table -AutoSize
