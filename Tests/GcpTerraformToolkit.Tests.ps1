@@ -77,7 +77,7 @@ Describe 'Set-GitCredentialFromClipboard' {
         Mock -CommandName Write-Error -ModuleName GcpTerraformToolkit {}
         $malicious = 'rm -rf / ; git config --global credential.evil "pwned"; echo done'
         # Only the well-formed --global "<key>" "<value>" portion is ever considered,
-        # and 'credential.evil' IS in-namespace, so it WOULD be applied as data —
+        # and 'credential.evil' IS in-namespace, so it WOULD be applied as data -
         # but critically, 'rm -rf /' and 'echo done' are never executed as commands.
         Set-GitCredentialFromClipboard -InputText $malicious -Confirm:$false
         Should -Invoke -CommandName git -ModuleName GcpTerraformToolkit -Times 1
