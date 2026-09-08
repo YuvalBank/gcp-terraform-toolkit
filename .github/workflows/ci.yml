@@ -8,34 +8,41 @@ on:
 
 jobs:
   test:
-    name: Lint & Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Install PSScriptAnalyzer and Pester
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+
+      - name: Install Pester
         shell: pwsh
         run: |
-          Install-Module -Name PSScriptAnalyzer -MinimumVersion 1.21.0 -Force -SkipPublisherCheck -Scope CurrentUser
-          Install-Module -Name Pester -MinimumVersion 5.5.0 -Force -SkipPublisherCheck -Scope CurrentUser
+          Install-Module -Name Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99 -Force -SkipPublisherCheck -Scope CurrentUser
+          Import-Module Pester
 
-      - name: Run PSScriptAnalyzer
+      - name: Install PSScriptAnalyzer
         shell: pwsh
         run: |
-          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings ./PSScriptAnalyzerSettings.psd1
-          $results | Format-Table -AutoSize
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          Import-Module PSScriptAnalyzer
 
-          $errors = $results | Where-Object { $_.Severity -eq 'Error' }
-          if ($errors) {
-            Write-Host "::error::PSScriptAnalyzer found $($errors.Count) error(s)."
+      - name: Lint with PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          $settings = Import-PowerShellDataFile -Path ./PSScriptAnalyzerSettings.psd1
+          $results = Invoke-ScriptAnalyzer -Path . -Recurse -Settings $settings
+          if ($results) {
+            $results | Format-Table -AutoSize
             exit 1
           }
+          Write-Host "✓ Linting passed" -ForegroundColor Green
 
       - name: Run Pester tests
         shell: pwsh
@@ -44,12 +51,12 @@ jobs:
           $config.Run.Path = './Tests'
           $config.Run.Exit = $true
           $config.Output.Verbosity = 'Detailed'
-          $config.CodeCoverage.Enabled = $true
-          $config.CodeCoverage.Path = @('./Public/*.ps1', './Private/*.ps1')
           Invoke-Pester -Configuration $config
 
-      - name: Import module smoke test
+      - name: Verify module loads
         shell: pwsh
         run: |
-          Import-Module ./GcpTerraformToolkit.psd1 -Force
-          Get-Command -Module GcpTerraformToolkit | Format-Table -AutoSize
+          Import-Module ./GcpTerraformToolkit.psd1 -Force -Verbose
+          $functions = Get-Command -Module GcpTerraformToolkit -Type Function
+          Write-Host "✓ Module loaded with $($functions.Count) functions" -ForegroundColor Green
+          $functions | Format-Table -AutoSize
