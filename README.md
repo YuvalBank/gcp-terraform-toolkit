@@ -1,6 +1,6 @@
 # GcpTerraformToolkit
 
-[![CI](https://github.com/YOUR_USERNAME/gcp-terraform-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/gcp-terraform-toolkit/actions/workflows/ci.yml)
+[![CI](https://github.com/YuvalBank/gcp-terraform-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/YuvalBank/gcp-terraform-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PowerShell Gallery](https://img.shields.io/badge/PSGallery-not%20yet%20published-lightgrey)](https://www.powershellgallery.com/)
 
@@ -32,7 +32,7 @@ one-off scripts often introduce a real security risk.
 ### Option A — Clone and import (works today)
 
 ```powershell
-git clone https://github.com/YOUR_USERNAME/gcp-terraform-toolkit.git
+git clone https://github.com/YuvalBank/gcp-terraform-toolkit.git
 Import-Module ./gcp-terraform-toolkit/GcpTerraformToolkit.psd1
 ```
 
