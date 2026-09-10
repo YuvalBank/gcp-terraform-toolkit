@@ -35,17 +35,19 @@ jobs:
           }
           Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
-      - name: Install Pester
+      - name: Install and configure Pester
         shell: pwsh
         run: |
           Install-Module -Name Pester -MinimumVersion 5.5.0 -MaximumVersion 5.99.99 -Force -SkipPublisherCheck -Scope CurrentUser
-          Import-Module Pester
+          Import-Module Pester -Force -PassThru | Out-Null
+          Write-Host "Pester module loaded: $(Get-Module -Name Pester | Select-Object -ExpandProperty Version)" -ForegroundColor Green
 
-      - name: Install PSScriptAnalyzer
+      - name: Install and configure PSScriptAnalyzer
         shell: pwsh
         run: |
           Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck -Scope CurrentUser
-          Import-Module PSScriptAnalyzer
+          Import-Module PSScriptAnalyzer -Force -PassThru | Out-Null
+          Write-Host "PSScriptAnalyzer module loaded: $(Get-Module -Name PSScriptAnalyzer | Select-Object -ExpandProperty Version)" -ForegroundColor Green
 
       - name: Lint with PSScriptAnalyzer
         shell: pwsh
@@ -63,12 +65,17 @@ jobs:
       - name: Run Pester tests
         shell: pwsh
         run: |
+          # Import modules in the same session as tests
+          Import-Module Pester -Force
+          Import-Module PSScriptAnalyzer -Force
+          
           $config = New-PesterConfiguration
           $config.Run.Path = './Tests'
           $config.Run.Exit = $true
           $config.Output.Verbosity = 'Detailed'
           $config.CodeCoverage.Enabled = $true
           $config.CodeCoverage.Path = @('./Public/*.ps1', './Private/*.ps1')
+          
           Invoke-Pester -Configuration $config
 
       - name: Verify module loads
