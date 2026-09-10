@@ -122,14 +122,16 @@ Describe 'Start-GcpAuth' {
     }
 }
 
-# Separate Describe block for InModuleScope tests
-Describe 'Test-CommandExists' -Skip:($PSVersionTable.PSVersion.Major -lt 6) {
-    InModuleScope GcpTerraformToolkit {
-        It 'returns $true for a command that exists' {
+# Separate Describe block for testing the private function via InModuleScope
+Describe 'Test-CommandExists' {
+    It 'returns $true for a command that exists' {
+        InModuleScope GcpTerraformToolkit {
             Test-CommandExists -Name 'Get-Command' | Should -BeTrue
         }
+    }
 
-        It 'returns $false for a command that does not exist' {
+    It 'returns $false for a command that does not exist' {
+        InModuleScope GcpTerraformToolkit {
             Test-CommandExists -Name 'this-command-does-not-exist-12345' | Should -BeFalse
         }
     }
