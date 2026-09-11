@@ -75,6 +75,7 @@ jobs:
           $config.Output.Verbosity = 'Detailed'
           $config.CodeCoverage.Enabled = $true
           $config.CodeCoverage.Path = @('./Public/*.ps1', './Private/*.ps1')
+          $config.CodeCoverage.CoveragePercentTarget = 40
           
           Invoke-Pester -Configuration $config
 
