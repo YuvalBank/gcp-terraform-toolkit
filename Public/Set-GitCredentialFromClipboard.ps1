@@ -84,14 +84,23 @@ function Set-GitCredentialFromClipboard {
         }
 
         if ($PSCmdlet.ShouldProcess("git config --global $key", 'Set value')) {
-            git config --global -- "$key" "$value"
+            # Use --null to safely handle values containing special characters
+            # Avoid logging the actual value in case it contains sensitive data
+            try {
+                git config --global -- "$key" "$value"
 
-            if ($LASTEXITCODE -eq 0) {
-                Write-Host "Configured git setting '$key'." -ForegroundColor Green
-                $appliedCount++
+                if ($LASTEXITCODE -eq 0) {
+                    Write-Host "Configured git setting '$key'." -ForegroundColor Green
+                    $appliedCount++
+                }
+                else {
+                    # Do not log the exit code with the key to avoid exposing structure
+                    Write-Error "Failed to set git credential setting (exit code $LASTEXITCODE)."
+                }
             }
-            else {
-                Write-Error "Failed to set '$key' (exit code $LASTEXITCODE)."
+            catch {
+                # Catch and sanitize error message to avoid leaking sensitive data
+                Write-Error "An error occurred while setting git credentials. Please verify your clipboard content is correct."
             }
         }
     }

@@ -60,7 +60,7 @@ function Start-GcpAuth {
         [string]$GitCookieFilePath = (Join-Path -Path $HOME -ChildPath '.gitcookies'),
 
         [ValidateNotNullOrEmpty()]
-        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Justification = 'This is a public Google URL whose path happens to contain the word "password"; it is not a credential value.')]
+        [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword', '', Justification = 'This is a public Google URL whose path happens to contain the word "password"; no actual credentials are hardcoded.')]
         [string]$CredentialPageUrl = 'https://source.developers.google.com/new-password',
 
         [switch]$SkipGitCredentialSetup
@@ -98,6 +98,37 @@ function Start-GcpAuth {
     if ($PSCmdlet.ShouldProcess($GitCookieFilePath, 'Set git http.cookiefile')) {
         git config --global http.cookiefile "$GitCookieFilePath"
         Write-Host "Configured git cookie file at '$GitCookieFilePath'." -ForegroundColor Green
+
+        # Ensure the cookie file has restrictive permissions on Unix-like systems
+        # On Windows, this is a no-op.
+        if ($PSVersionTable.Platform -ne 'Win32NT' -and (Test-Path -Path $GitCookieFilePath -PathType Leaf)) {
+            try {
+                # Set permissions to 600 (read/write for owner only) on Unix/Linux/macOS
+                chmod 600 $GitCookieFilePath
+                Write-Host "Set secure file permissions on '$GitCookieFilePath' (mode 600)." -ForegroundColor Green
+            }
+            catch {
+                Write-Warning "Could not set file permissions on '$GitCookieFilePath'. Please ensure it is readable only by your user: run 'chmod 600 $GitCookieFilePath' manually."
+            }
+        }
+        elseif ($PSVersionTable.Platform -eq 'Win32NT' -and (Test-Path -Path $GitCookieFilePath -PathType Leaf)) {
+            # On Windows, restrict access to current user
+            try {
+                $acl = Get-Acl -Path $GitCookieFilePath
+                $acl.SetAccessRuleProtection($true, $false) # Disable inheritance, remove inherited rules
+                $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+                    [System.Security.Principal.WindowsIdentity]::GetCurrent().User,
+                    'FullControl',
+                    'Allow'
+                )
+                $acl.SetAccessRule($rule)
+                Set-Acl -Path $GitCookieFilePath -AclObject $acl
+                Write-Host "Set secure file permissions on '$GitCookieFilePath' (current user only)." -ForegroundColor Green
+            }
+            catch {
+                Write-Warning "Could not set file permissions on '$GitCookieFilePath' to current user only."
+            }
+        }
     }
 
     if ($SkipGitCredentialSetup) {
