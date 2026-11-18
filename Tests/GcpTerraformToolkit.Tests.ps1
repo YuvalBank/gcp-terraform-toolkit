@@ -107,6 +107,9 @@ Describe 'Start-GcpAuth' {
     }
 
     It 'does not attempt git configuration when git is missing' {
+        if (-not (Get-Command gcloud -ErrorAction SilentlyContinue)) {
+            function global:gcloud {}
+        }
         Mock -CommandName Test-CommandExists -ModuleName GcpTerraformToolkit {
             param($Name)
             return $Name -eq 'gcloud'
@@ -122,13 +125,16 @@ Describe 'Start-GcpAuth' {
     }
 }
 
-InModuleScope GcpTerraformToolkit {
-    Describe 'Test-CommandExists' {
-        It 'returns $true for a command that exists' {
+# Separate Describe block for testing the private function via InModuleScope
+Describe 'Test-CommandExists' {
+    It 'returns $true for a command that exists' {
+        InModuleScope GcpTerraformToolkit {
             Test-CommandExists -Name 'Get-Command' | Should -BeTrue
         }
+    }
 
-        It 'returns $false for a command that does not exist' {
+    It 'returns $false for a command that does not exist' {
+        InModuleScope GcpTerraformToolkit {
             Test-CommandExists -Name 'this-command-does-not-exist-12345' | Should -BeFalse
         }
     }
