@@ -68,7 +68,7 @@ function tfaa {
         [Parameter(ValueFromRemainingArguments)]
         [string[]]$Arguments
     )
-    Write-Warning "Running 'terraform apply -auto-approve' - changes will be applied without further confirmation."
+    Write-Warning "Running 'terraform apply -auto-approve' - terraform will not ask for approval. PowerShell's own confirmation prompt still applies unless you pass -Confirm:`$false."
     Invoke-Terraform -Command apply -Arguments (@('-auto-approve') + $Arguments)
 }
 

@@ -58,6 +58,12 @@ Every function checks for its required external command and fails with an
 actionable message (with an install link) rather than an unhelpful error if
 a dependency is missing.
 
+> **Note on Git credentials:** the Git credential step uses Google Cloud Source
+> Repositories, which Google stopped offering to new customers on 2024-06-17
+> ([details](https://cloud.google.com/source-repositories/pricing)). If your
+> organization never used it, run `Start-GcpAuth -SkipGitCredentialSetup` and
+> use the `gcloud` and Terraform features only.
+
 ## Usage
 
 ### Authenticate with GCP
@@ -73,6 +79,8 @@ This will:
 4. Open the Google Source Repositories password page and prompt you to copy
    the generated `git config` command, then apply it safely (see
    [Security notes](#security-notes) below).
+
+`glog` is a short alias for `Start-GcpAuth`.
 
 ```powershell
 # Skip Application Default Credentials
@@ -172,6 +180,8 @@ gcp-terraform-toolkit/
 ├── Tests/                         # Pester test suite
 │   └── GcpTerraformToolkit.Tests.ps1
 ├── .github/workflows/ci.yml       # Lint + test on Windows/macOS/Linux
+├── .github/workflows/codeql.yml   # CodeQL scan (GitHub Actions workflows)
+├── .github/dependabot.yml         # Weekly GitHub Actions updates
 ├── PSScriptAnalyzerSettings.psd1
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
