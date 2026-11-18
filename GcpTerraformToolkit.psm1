@@ -38,4 +38,4 @@ foreach ($folder in @('Private', 'Public')) {
 # Aliases. Functions themselves are exported via FunctionsToExport in the module manifest.
 Set-Alias -Name glog -Value Start-GcpAuth
 
-Export-ModuleMember -Function * -Alias glog
+Export-ModuleMember -Function Start-GcpAuth, Set-GitCredentialFromClipboard, Invoke-Terraform, tfi, tfp, tfa, tfaa, tfd, tfv, tff, tfo -Alias glog

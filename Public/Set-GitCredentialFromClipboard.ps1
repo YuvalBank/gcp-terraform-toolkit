@@ -84,7 +84,6 @@ function Set-GitCredentialFromClipboard {
         }
 
         if ($PSCmdlet.ShouldProcess("git config --global $key", 'Set value')) {
-            # Use --null to safely handle values containing special characters
             # Avoid logging the actual value in case it contains sensitive data
             try {
                 git config --global -- "$key" "$value"
