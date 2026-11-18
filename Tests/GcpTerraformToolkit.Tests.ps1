@@ -123,6 +123,7 @@ Describe 'Start-GcpAuth' {
         Should -Invoke -CommandName git -ModuleName GcpTerraformToolkit -Times 0
         Should -Invoke -CommandName Write-Warning -ModuleName GcpTerraformToolkit -Times 1
     }
+}
 
 # Separate Describe block for testing the private function via InModuleScope
 Describe 'Test-CommandExists' {
