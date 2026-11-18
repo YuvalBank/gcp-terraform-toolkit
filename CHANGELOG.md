@@ -5,9 +5,11 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-09-08
+## [1.0.0] - 2026-11-18
 
 ### Added
+- CodeQL code-scanning workflow (GitHub Actions workflows) and weekly Dependabot updates for GitHub Actions.
+- Stricter dependency checks in `Start-GcpAuth` and clearer, validated clipboard credential handling in `Set-GitCredentialFromClipboard`.
 - Initial public release as a proper PowerShell module (`GcpTerraformToolkit`).
 - `Start-GcpAuth`: cross-platform-aware GCP authentication flow with dependency checks.
 - `Set-GitCredentialFromClipboard`: safe, regex-based credential parser replacing
@@ -18,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   input handling.
 - GitHub Actions CI running PSScriptAnalyzer and Pester on Windows, macOS, and Linux.
 - Comment-based help for every public function (`Get-Help <FunctionName> -Full`).
+
+### Fixed
+- CI: Pester test file had a missing closing brace, so no tests were discovered; all tests now run and pass on Windows, macOS and Linux.
 
 ### Changed
 - Replaced execution of arbitrary clipboard content as a temporary `.cmd` script
