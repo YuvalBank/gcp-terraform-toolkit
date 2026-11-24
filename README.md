@@ -1,5 +1,9 @@
 # GcpTerraformToolkit
 
+## Security baseline
+
+Security is a required foundation for every new code path and every change, from design through review, acceptance and release. Read [SECURITY.md](SECURITY.md) before planning work or claiming readiness. Target, current evidence and release decision are separate records; missing evidence is not PASS.
+
 [![CI](https://github.com/YuvalBank/gcp-terraform-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/YuvalBank/gcp-terraform-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PowerShell Gallery](https://img.shields.io/badge/PSGallery-not%20yet%20published-lightgrey)](https://www.powershellgallery.com/)
@@ -121,6 +125,9 @@ Invoke-Terraform -Command apply -Confirm
 
 ## Security notes
 
+Security is required from design through acceptance for every new code path and every change. Read the local [public security engineering baseline](SECURITY_BASELINE.md) and [SECURITY.md](SECURITY.md) before implementation, review or release.
+
+
 The original version of this tooling copied a `git config` command from a
 browser to the clipboard and executed the *entire clipboard contents* as a
 temporary batch file. That pattern is risky: anything else on the clipboard,
@@ -183,6 +190,7 @@ gcp-terraform-toolkit/
 ├── .github/workflows/codeql.yml   # CodeQL scan (GitHub Actions workflows)
 ├── .github/dependabot.yml         # Weekly GitHub Actions updates
 ├── PSScriptAnalyzerSettings.psd1
+├── SECURITY_BASELINE.md          # Public security engineering baseline
 ├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── LICENSE
