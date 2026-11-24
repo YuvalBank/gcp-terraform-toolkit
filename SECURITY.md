@@ -66,3 +66,18 @@ maintainers time to develop and release a fix.
 
 For security issues, contact the repository maintainer via private security advisory.
 For general support, open a public issue or discussion.
+
+
+## Public secure-by-design baseline
+
+Security is a mandatory design-time requirement for **every new code path and every change**, from planning through implementation, independent review, acceptance and release. Read the local [public security engineering baseline](SECURITY_BASELINE.md) before scoping, reviewing or releasing work.
+
+| Field | Current project record |
+| --- | --- |
+| Profile | Public PowerShell CLI and Terraform helper module |
+| Required standards/profile | SSDF 1.1 + OSPS 2026.08.28; command/input validation, credentials, subprocesses, destructive-action safeguards, dependency/signing/update review and least-privilege cloud guidance. |
+| Current compliance claim | None. This section sets targets and evidence rules; it does not certify current compliance. |
+| Initial retrofit status | UNASSESSED unless a project document names an exact revision, environment, method, date, owner, reviewer and evidence artifact. |
+| Release boundary | Critical credential handling, arbitrary-input execution, destructive-operation, dependency/supply-chain, isolation or recovery unknowns block the affected release until resolved. |
+
+Existing stricter arbitrary-input, credential, path, WhatIf/Confirm and private-advisory rules remain in force. Public documentation is self-contained and does not rely on private repository links.

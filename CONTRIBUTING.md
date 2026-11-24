@@ -1,5 +1,9 @@
 # Contributing to GcpTerraformToolkit
 
+## Security baseline
+
+Security is required from design through acceptance for every new code path and every change. Read [SECURITY.md](SECURITY.md) and the local [public security engineering baseline](SECURITY_BASELINE.md) before implementation or review. Record target, current evidence and release decision separately; a critical security unknown blocks affected real data and broader release.
+
 Thanks for considering a contribution! This project aims to stay small, safe,
 and dependency-light, so please keep pull requests focused.
 

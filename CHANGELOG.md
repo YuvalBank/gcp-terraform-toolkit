@@ -5,6 +5,12 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- Local public security engineering baseline revision 2026-11-24.2 with applicability, evidence-status and release-gate rules.
+- Cross-platform compatibility baseline revision 2026-11-25.1 with device/runtime/version evidence and release-gate rules.
+
 ## [1.0.0] - 2026-11-18
 
 ### Added
