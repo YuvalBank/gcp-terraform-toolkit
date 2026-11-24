@@ -4,6 +4,10 @@
 
 Security is a required foundation for every new code path and every change, from design through review, acceptance and release. Read [SECURITY.md](SECURITY.md) before planning work or claiming readiness. Target, current evidence and release decision are separate records; missing evidence is not PASS.
 
+## Compatibility baseline
+
+Every platform, site, app, tool or template is designed for the broad practical matrix of devices, versions, browsers and operating systems it claims to support. Read [COMPATIBILITY.md](COMPATIBILITY.md) before claiming compatibility. Record tested, unsupported and unknown combinations separately; one local run is not universal support.
+
 [![CI](https://github.com/YuvalBank/gcp-terraform-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/YuvalBank/gcp-terraform-toolkit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PowerShell Gallery](https://img.shields.io/badge/PSGallery-not%20yet%20published-lightgrey)](https://www.powershellgallery.com/)
